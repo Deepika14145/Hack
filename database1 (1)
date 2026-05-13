@@ -1,0 +1,240 @@
+1)to start haddop
+[cloudera@quickstart ~]$ sudo service hadoop-hdfs-namenode start
+namenode running as process 2114. Stop it first.
+Started Hadoop namenode:                                   [  OK  ]
+[cloudera@quickstart ~]$ sudo service hadoop-hdfs-datanode start
+datanode running as process 1928. Stop it first.
+Started Hadoop datanode (hadoop-hdfs-datanode):            [  OK  ]
+[cloudera@quickstart ~]$ sudo service hadoop-yarn-resourcemanager start
+resourcemanager running as process 2788. Stop it first.
+Started Hadoop resourcemanager:                            [  OK  ]
+[cloudera@quickstart ~]$ sudo service hadoop-yarn-nodemanager start
+nodemanager running as process 2512. Stop it first.
+Started Hadoop nodemanager:                                [  OK  ]
+
+2)to start hbase shell
+[cloudera@quickstart ~]$ hbase shell
+2026-05-06 10:50:29,204 INFO  [main] Configuration.deprecation: hadoop.native.lib is deprecated. Instead, use io.native.lib.available
+HBase Shell; enter 'help<RETURN>' for list of supported commands.
+Type "exit<RETURN>" to leave the HBase Shell
+Version 1.0.0-cdh5.4.2, rUnknown, Tue May 19 17:07:29 PDT 2015
+
+3)to create hbase table
+hbase(main):001:0> create 'FlightInfo','flight','schedule','delay'
+0 row(s) in 3.9510 seconds
+
+4)to add data in that table
+=> Hbase::Table - FlightInfo
+hbase(main):002:0> put 'FlightInfo','1','flight:fname','AirIndia'
+0 row(s) in 0.8430 seconds
+
+hbase(main):003:0> put 'FlightInfo','1','schedule:departure','10:00'
+0 row(s) in 0.5190 seconds
+
+hbase(main):004:0> put 'FlightInfo','1','delay:departuredelay','15'
+0 row(s) in 0.0420 seconds
+
+hbase(main):005:0> put 'FlightInfo','2','flight:fname','Indigo'
+0 row(s) in 0.0740 seconds
+
+hbase(main):006:0> put 'FlightInfo','2','schedule:departure','11:30'
+0 row(s) in 0.0390 seconds
+
+hbase(main):007:0> put 'FlightInfo','1','delay:departuredelay','20'
+0 row(s) in 0.0410 seconds
+
+hbase(main):008:0> put 'FlightInfo','1','delay:departuredelay','15'
+0 row(s) in 0.0470 seconds
+
+hbase(main):009:0> put 'FlightInfo','2','delay:departuredelay','20'
+0 row(s) in 0.0470 seconds
+
+hbase(main):010:0> put 'FlightInfo','3','flight:fname','SpiceJet'
+0 row(s) in 0.0320 seconds
+
+hbase(main):011:0> put 'FlightInfo','3','schedule:departure','01:00'
+0 row(s) in 0.0520 seconds
+
+hbase(main):012:0> put 'FlightInfo','3','delay:departuredelay','5'
+0 row(s) in 0.0380 seconds
+
+5)to display the table
+hbase(main):014:0> scan 'FlightInfo'
+ROW                                                          COLUMN+CELL                                                                                                                                                                     
+ 1                                                           column=delay:departuredelay, timestamp=1778090141167, value=15                                                                                                                  
+ 1                                                           column=flight:fname, timestamp=1778090034164, value=AirIndia                                                                                                                    
+ 1                                                           column=schedule:departure, timestamp=1778090064143, value=10:00                                                                                                                 
+ 2                                                           column=delay:departuredelay, timestamp=1778090147381, value=20                                                                                                                  
+ 2                                                           column=flight:fname, timestamp=1778090112298, value=Indigo                                                                                                                      
+ 2                                                           column=schedule:departure, timestamp=1778090126639, value=11:30                                                                                                                 
+ 3                                                           column=delay:departuredelay, timestamp=1778090197211, value=5                                                                                                                   
+ 3                                                           column=flight:fname, timestamp=1778090169243, value=SpiceJet                                                                                                                    
+ 3                                                           column=schedule:departure, timestamp=1778090185202, value=01:00                                                                                                                 
+3 row(s) in 0.2930 seconds
+
+6)to get list of table
+hbase(main):015:0> list
+TABLE                                                                                                                                                                                                                                        
+FlightInfo                                                                                                                                                                                                                                   
+1 row(s) in 0.2110 seconds
+
+=> ["FlightInfo"]
+
+7)to describe table
+hbase(main):016:0> describe 'FlightInfo'
+Table FlightInfo is ENABLED                                                                                                                                                                                                                  
+FlightInfo                                                                                                                                                                                                                                   
+COLUMN FAMILIES DESCRIPTION                                                                                                                                                                                                                  
+{NAME => 'delay', DATA_BLOCK_ENCODING => 'NONE', BLOOMFILTER => 'ROW', REPLICATION_SCOPE => '0', VERSIONS => '1', COMPRESSION => 'NONE', MIN_VERSIONS => '0', TTL => 'FOREVER', KEEP_DELETED_CELLS => 'FALSE', BLOCKSIZE => '65536', IN_MEMOR
+Y => 'false', BLOCKCACHE => 'true'}                                                                                                                                                                                                          
+{NAME => 'flight', DATA_BLOCK_ENCODING => 'NONE', BLOOMFILTER => 'ROW', REPLICATION_SCOPE => '0', VERSIONS => '1', COMPRESSION => 'NONE', MIN_VERSIONS => '0', TTL => 'FOREVER', KEEP_DELETED_CELLS => 'FALSE', BLOCKSIZE => '65536', IN_MEMO
+RY => 'false', BLOCKCACHE => 'true'}                                                                                                                                                                                                         
+{NAME => 'schedule', DATA_BLOCK_ENCODING => 'NONE', BLOOMFILTER => 'ROW', REPLICATION_SCOPE => '0', VERSIONS => '1', COMPRESSION => 'NONE', MIN_VERSIONS => '0', TTL => 'FOREVER', KEEP_DELETED_CELLS => 'FALSE', BLOCKSIZE => '65536', IN_ME
+MORY => 'false', BLOCKCACHE => 'true'}                                                                                                                                                                                                       
+3 row(s) in 0.1650 seconds
+
+8)to alter the table
+hbase(main):017:0> alter 'FlightInfo',NAME=>'status'
+Updating all regions with the new schema...
+0/1 regions updated.
+0/1 regions updated.
+1/1 regions updated.
+Done.
+0 row(s) in 4.0880 seconds
+
+9)to disable the table
+hbase(main):018:0> disable 'FlightInfo'
+0 row(s) in 2.0050 seconds
+
+10)to drop the table
+hbase(main):019:0> drop 'FlightInfo'
+0 row(s) in 1.3110 seconds
+
+11)to recreate the table
+hbase(main):020:0> create 'FlightInfo','flight','schedule','delay'
+0 row(s) in 1.8170 seconds
+
+=> Hbase::Table - FlightInfo
+hbase(main):021:0> put 'FlightInfo','1','flight:fname','AirIndia'
+0 row(s) in 0.1120 seconds
+
+hbase(main):022:0> put 'FlightInfo','1','schedule:departure','10:00'
+0 row(s) in 0.0470 seconds
+
+hbase(main):023:0> put 'FlightInfo','1','delay:departuredelay','15'
+0 row(s) in 0.0500 seconds
+
+hbase(main):024:0> put 'FlightInfo','2','flight:fname','Indigo'
+0 row(s) in 0.0330 seconds
+
+hbase(main):025:0> put 'FlightInfo','2','schedule:departure','11:30'
+0 row(s) in 0.0580 seconds
+
+hbase(main):026:0> put 'FlightInfo','1','delay:departuredelay','20'
+0 row(s) in 0.0470 seconds
+
+hbase(main):027:0> put 'FlightInfo','3','flight:fname','SpiceJet'
+0 row(s) in 0.0580 seconds
+
+hbase(main):028:0> put 'FlightInfo','3','schedule:departure','01:00'
+0 row(s) in 0.0320 seconds
+
+hbase(main):029:0> put 'FlightInfo','1','delay:departuredelay','15'
+0 row(s) in 0.0490 seconds
+
+hbase(main):030:0> put 'FlightInfo','2','delay:departuredelay','20'
+0 row(s) in 0.0350 seconds
+
+hbase(main):031:0> put 'FlightInfo','3','delay:departuredelay','5'
+0 row(s) in 0.0310 seconds
+
+12)exit from hbase
+hbase(main):032:0> exit
+
+13)to open hive shell
+[cloudera@quickstart ~]$ hive
+
+Logging initialized using configuration in file:/etc/hive/conf.dist/hive-log4j.properties
+WARNING: Hive CLI is deprecated and migration to Beeline is recommended.
+
+14)to create external table in hive
+hive> create external table FlightHive(id string,fname string,departure string,departuredelay int) stored by 'org.apache.hadoop.hive.hbase.HBaseStorageHandler' with serdeproperties("hbase.columns.mapping"=":key,flight:fname,schedule:departure,delay:departuredelay") tblproperties("hbase.table.name"="FlightInfo");
+OK
+Time taken: 13.572 seconds
+
+15)to display table in hive
+hive> select * from FlightHive
+    > ;
+OK
+1	AirIndia	10:00	15
+2	Indigo	11:30	20
+3	SpiceJet	01:00	5
+Time taken: 4.043 seconds, Fetched: 3 row(s)
+
+16)to find sum of departuredelay
+hive> select sum(departuredelay) as Total_Departure_Delay from FlightHive;
+Query ID = cloudera_20260506110707_cba5bb35-f7a5-49fb-b79f-1227e45b7a98
+Total jobs = 1
+Launching Job 1 out of 1
+Number of reduce tasks determined at compile time: 1
+In order to change the average load for a reducer (in bytes):
+  set hive.exec.reducers.bytes.per.reducer=<number>
+In order to limit the maximum number of reducers:
+  set hive.exec.reducers.max=<number>
+In order to set a constant number of reducers:
+  set mapreduce.job.reduces=<number>
+Starting Job = job_1778079688550_0006, Tracking URL = http://quickstart.cloudera:8088/proxy/application_1778079688550_0006/
+Kill Command = /usr/lib/hadoop/bin/hadoop job  -kill job_1778079688550_0006
+Hadoop job information for Stage-1: number of mappers: 1; number of reducers: 1
+2026-05-06 11:08:10,473 Stage-1 map = 0%,  reduce = 0%
+2026-05-06 11:08:59,049 Stage-1 map = 100%,  reduce = 0%, Cumulative CPU 12.99 sec
+2026-05-06 11:09:39,212 Stage-1 map = 100%,  reduce = 67%, Cumulative CPU 18.82 sec
+2026-05-06 11:09:42,113 Stage-1 map = 100%,  reduce = 100%, Cumulative CPU 22.46 sec
+MapReduce Total cumulative CPU time: 22 seconds 460 msec
+Ended Job = job_1778079688550_0006
+MapReduce Jobs Launched: 
+Stage-Stage-1: Map: 1  Reduce: 1   Cumulative CPU: 22.46 sec   HDFS Read: 7167 HDFS Write: 3 SUCCESS
+Total MapReduce CPU Time Spent: 22 seconds 460 msec
+OK
+40
+Time taken: 156.86 seconds, Fetched: 1 row(s)
+
+17)to find average of departure delay
+hive> select avg(departuredelay) as Average_Departure_Delay from FlightHive;
+Query ID = cloudera_20260506111010_c9e7f340-9435-4973-a0ea-120b01fd2164
+Total jobs = 1
+Launching Job 1 out of 1
+Number of reduce tasks determined at compile time: 1
+In order to change the average load for a reducer (in bytes):
+  set hive.exec.reducers.bytes.per.reducer=<number>
+In order to limit the maximum number of reducers:
+  set hive.exec.reducers.max=<number>
+In order to set a constant number of reducers:
+  set mapreduce.job.reduces=<number>
+Starting Job = job_1778079688550_0007, Tracking URL = http://quickstart.cloudera:8088/proxy/application_1778079688550_0007/
+Kill Command = /usr/lib/hadoop/bin/hadoop job  -kill job_1778079688550_0007
+Hadoop job information for Stage-1: number of mappers: 1; number of reducers: 1
+2026-05-06 11:10:50,369 Stage-1 map = 0%,  reduce = 0%
+2026-05-06 11:11:34,334 Stage-1 map = 100%,  reduce = 0%, Cumulative CPU 15.28 sec
+2026-05-06 11:12:12,003 Stage-1 map = 100%,  reduce = 67%, Cumulative CPU 20.8 sec
+2026-05-06 11:12:15,875 Stage-1 map = 100%,  reduce = 100%, Cumulative CPU 24.45 sec
+MapReduce Total cumulative CPU time: 24 seconds 450 msec
+Ended Job = job_1778079688550_0007
+MapReduce Jobs Launched: 
+Stage-Stage-1: Map: 1  Reduce: 1   Cumulative CPU: 24.45 sec   HDFS Read: 7619 HDFS Write: 19 SUCCESS
+Total MapReduce CPU Time Spent: 24 seconds 450 msec
+OK
+13.333333333333334
+Time taken: 134.033 seconds, Fetched: 1 row(s)
+
+18)to create index
+hive> create index FlightIndex on table FlightHive(fname) as 'org.apache.hadoop.hive.ql.index.compact.CompactIndexHandler' with deferred rebuild;
+OK
+Time taken: 1.503 seconds
+hive> show index on FlightHive
+    > ;
+OK
+flightindex         	flighthive          	fname               	default__flighthive_flightindex__	compact             	
+Time taken: 0.399 seconds, Fetched: 1 row(s)
+
+
